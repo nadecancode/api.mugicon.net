@@ -1,9 +1,8 @@
-let net = require('net');
 let express = require('express');
 let expression = require('../util/expression');
 let token = require('../util/token');
 let httpRequest = require('request');
-let JSDOM = require("jsdom");
+let HTMLParser = require('fast-html-parser');
 
 let tokenCache = {};
 
@@ -118,7 +117,7 @@ function checkToken(request, response) {
             .status(403)
             .send({
                 "code": 403,
-                "message": "The query `token` does not exist in the cache, please refresh it using the /login endpoint"
+                "message": "The query `token` does not exist in the cache, please refresh it using the /account/authenticate endpoint"
             });
 
         return null;
@@ -137,22 +136,22 @@ function fetchTranscript(cookie, contentCallback) {
         }
     }, (request, response) => {
         if (response.status === 200) {
-            let jsdom = new JSDOM(response.body);
+            let document = HTMLParser.parse(response.body);
             contentCallback({
                 "graduation": {
-                    "track": jsdom.window.document.querySelector("ctl00_MainContent_subHIS_rptGPAInfo_ctl01_lblGRT2").textContent
+                    "track": document.querySelector("ctl00_MainContent_subHIS_rptGPAInfo_ctl01_lblGRT2").textContent
                 },
                 "gpa": {
-                    "weighted": Number.parseFloat(jsdom.window.document.querySelector("ctl00_MainContent_subHIS_rptGPAInfo_ctl01_lblTP").textContent),
-                    "unweighted": Number.parseFloat(jsdom.window.document.querySelector("ctl00_MainContent_subHIS_rptGPAInfo_ctl01_lblTPN").textContent)
+                    "weighted": Number.parseFloat(document.querySelector("ctl00_MainContent_subHIS_rptGPAInfo_ctl01_lblTP").textContent),
+                    "unweighted": Number.parseFloat(document.querySelector("ctl00_MainContent_subHIS_rptGPAInfo_ctl01_lblTPN").textContent)
                 },
                 "credit": {
-                    "attended": Number.parseFloat(jsdom.window.document.querySelector("ctl00_MainContent_subHIS_rptGPAInfo_ctl01_lblCA").textContent),
-                    "completed": Number.parseFloat(jsdom.window.document.querySelector("ctl00_MainContent_subHIS_rptGPAInfo_ctl01_lblCC").textContent)
+                    "attended": Number.parseFloat(document.querySelector("ctl00_MainContent_subHIS_rptGPAInfo_ctl01_lblCA").textContent),
+                    "completed": Number.parseFloat(document.querySelector("ctl00_MainContent_subHIS_rptGPAInfo_ctl01_lblCC").textContent)
                 },
                 "ranking": {
-                    "current": Number.parseInt(jsdom.window.document.querySelector("ctl00_MainContent_subHIS_rptGPAInfo_ctl01_lblCR").textContent),
-                    "size": Number.parseInt(jsdom.window.document.querySelector("ctl00_MainContent_subHIS_rptGPAInfo_ctl01_lblCS").textContent)
+                    "current": Number.parseInt(document.querySelector("ctl00_MainContent_subHIS_rptGPAInfo_ctl01_lblCR").textContent),
+                    "size": Number.parseInt(document.querySelector("ctl00_MainContent_subHIS_rptGPAInfo_ctl01_lblCS").textContent)
                 }
             });
         } else {
