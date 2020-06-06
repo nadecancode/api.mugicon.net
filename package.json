@@ -1,0 +1,23 @@
+{
+  "name": "api",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "casperjs": "^1.1.4",
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "fast-json": "^1.1.0",
+    "http-errors": "~1.6.3",
+    "jsdom": "^16.2.2",
+    "morgan": "~1.9.1",
+    "phantomjs": "^2.1.7",
+    "pug": "2.0.0-beta11",
+    "puppeteer": "^3.3.0",
+    "puppeteer-cluster": "^0.21.0",
+    "request": "latest"
+  }
+}
