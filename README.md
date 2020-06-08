@@ -1,8 +1,4 @@
----
-description: >-
-  MUGI API is a collection of REST APIs hosted on api.mugicon.net, it provides
-  various endpoints which could be utilized by developers
----
+# MUGI API
+MUGI API is a collection of my personal (can be publicly available for everyone) RESTful APIs. I'm working on it in order to expand more tools for everyone to use.
 
-# MUGI API Overview
-
+I'm also working on a document for this project. It's available [here](https://doc.mugicon.net)
