@@ -3,14 +3,38 @@ let expression = require('../util/expression');
 let token = require('../util/token');
 let httpRequest = require('request');
 let HTMLParser = require('fast-html-parser');
+let base64 = require('../util/base64');
 
 let tokenCache = {};
 
 let router = express.Router();
 
 router.post("/account/authenticate", async (request, response) => {
-    let email = request.headers['email'];
-    let password = request.headers['password'];
+    let auth = request.headers['authorization'];
+
+    if (!auth) {
+        response
+            .status(403)
+            .send({
+                "code": 403,
+                "message": "A valid `Authorization` header must be included"
+            });
+        return;
+    }
+
+    if (!auth.startsWith("Basic")) {
+        response
+            .status(403)
+            .send({
+                "code": 403,
+                "message": "Only `Basic` Authorization method is valid at this moment"
+            });
+        return;
+    }
+
+    auth = base64.decode(auth.replace(/^Basic/, '').trim());
+
+    let email = auth.split(":")[0], password = auth.split(":")[1];
 
     if (!email || !password || !expression.isValidEmail(email)) {
         response
@@ -100,8 +124,8 @@ router.post("/grades/transcript", async (request, response) => {
 });
 
 function checkToken(request, response) {
-    let token = request.headers['token'];
-    if (!token) {
+    let auth = request.headers['authorization'];
+    if (!auth) {
         response
             .status(403)
             .send({
@@ -110,6 +134,17 @@ function checkToken(request, response) {
             });
         return null;
     }
+
+    if (!auth.includes("Bearer")) {
+        response
+            .status(403)
+            .send({
+               "code": 403,
+               "message": "Only `Bearer` Authorization method is supported at this moment"
+            });
+        return;
+    }
+    let token = auth.replace(/^Bearer/, '').trim();
 
     let cookie = tokenCache[token];
     if (!cookie) {
@@ -135,8 +170,13 @@ function fetchTranscript(cookie, contentCallback) {
             'Cookie': cookie
         }
     }, (request, response) => {
-        if (response.status === 200) {
+        if (response.statusCode === 200) {
             let document = HTMLParser.parse(response.body);
+            if (!document.querySelector("ctl00_MainContent_subHIS_tblEverything")) { // Parent table doesn't exist so we return an empty value here
+                contentCallback({});
+                return;
+            }
+
             contentCallback({
                 "graduation": {
                     "track": document.querySelector("ctl00_MainContent_subHIS_rptGPAInfo_ctl01_lblGRT2").textContent
@@ -169,7 +209,7 @@ function keepAlive(cookie, contentCallback) {
             'Cookie': cookie
         }
     }, (request, response) => {
-        contentCallback(response.status === 200 || response.status === 302); // The response code from Aeries could be either 200 or 302
+        contentCallback(response.statusCode === 200 || response.statusCode === 302); // The response code from Aeries could be either 200 or 302
     })
 }
 

@@ -13,6 +13,7 @@
     "debug": "~2.6.9",
     "express": "~4.16.1",
     "fast-html-parser": "^1.0.1",
+    "hat": "0.0.3",
     "hoek": ">=4.2.1",
     "http-errors": "~1.6.3",
     "jsdom": "^16.2.2",

@@ -1,5 +1,5 @@
-let crypto = require('crypto');
+let hat = require('hat');
 
 module.exports.randomToken = function(length) {
-    return crypto.randomBytes(Math.ceil(length/2)).toString('hex').slice(0, length);
+    return hat();
 };
