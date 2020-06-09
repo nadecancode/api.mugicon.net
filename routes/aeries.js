@@ -225,22 +225,24 @@ function fetchGrades(cookie, contentCallback) {
         let responseContent = [];
 
         let content = JSON.parse(response.body);
-        for (let index = 0; index < content.length; index++) {
+        for (let index = 0; index < content.length; index++) { // Starts to map the server response as beautified, minimized json
             let gradeResponse = content[index];
             responseContent[index] = {
                 "id": gradeResponse['CourseNumber'],
                 "name": gradeResponse['CourseName'],
+                "gradebook-number": expression.matchGradebookNumber(gradeResponse['Gradebook']),
                 "period": gradeResponse['Period'],
                 "teacher": gradeResponse['TeacherName'],
                 "room": gradeResponse['RoomNumber'],
+                "missing-assignments": expression.matchMissingAssignments(gradeResponse['MissingAssignments']),
                 "grade": {
                     "percent": Number.parseFloat(gradeResponse['Percent']),
                     "mark": gradeResponse['CurrentMark']
                 },
                 "term": {
                     "group": gradeResponse['TermGrouping'],
-
-                }
+                },
+                "attendance": expression.matchAttendance(gradeResponse['LastATT'])
             };
         }
 
@@ -256,8 +258,9 @@ function validateAuthenticationCookie(email, password, cookie, validationCallbac
 
     httpRequest(
         {
-            uri: 'https://parent.hlpusd.k12.ca.us/aeries.net/LoginParent.aspx',
+            uri: 'https://parent.hlpusd.k12.ca.us/aeries.net/LoginParent.aspx', // Base link
             method: 'POST',
+            // All of the necessary headers for Aeries server to identify this request as a "browser-based" request
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
                 'User-Agent': 'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.93 Safari/537.36',
@@ -270,9 +273,11 @@ function validateAuthenticationCookie(email, password, cookie, validationCallbac
                 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
                 'Cookie': cookie
             },
+            // For the `set-cookie` header
             xhrFields: {
                 withCredentials: true,
             },
+            // Mock Aeries POST request to validate the Cookie
             form: {
                 'checkCookiesEnabled': 'true',
                 'checkMobileDevice': 'false',
@@ -296,9 +301,11 @@ function retrieveAuthenticationCookie(email, tokenCallback) {
         {
             uri: 'https://parent.hlpusd.k12.ca.us/aeries.net/GeneralFunctions.asmx/GetIDPFromDomain',
             method: 'POST',
+            // For the `set-cookie` header
             xhrFields: {
                 withCredentials: true, // For 'set-cookie' response header
             },
+            // The content type must be `application/json` otherwise the server will just return a HTML page and does not give session Cookies
             headers: {
                 'Content-Type': 'application/json; charset=UTF-8'
             },
@@ -313,7 +320,7 @@ function retrieveAuthenticationCookie(email, tokenCallback) {
                 return;
             }
 
-            tokenCallback(httpRequest.cookie(setCookie[0])); // The only Cookie returned is the Session ID, so the first here is fine
+            tokenCallback(httpRequest.cookie(setCookie[0])); // The only Cookie returned is the session ID, so the first here is fine
         }
     )
 }
