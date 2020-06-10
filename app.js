@@ -7,6 +7,7 @@ let expression = require('./util/expression');
 
 let mc_status_router = require('./routes/mc-status');
 let aeries = require('./routes/aeries');
+let index = require('./routes/index');
 
 let app = express();
 
@@ -22,6 +23,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/mc-status', mc_status_router);
 app.use('/aeries', aeries);
+app.use("/", index);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

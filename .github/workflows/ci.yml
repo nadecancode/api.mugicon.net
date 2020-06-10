@@ -14,4 +14,4 @@ jobs:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USERNAME }}
           password: ${{ secrets.SERVER_PASSWORD }}
-          script: cd ${{ secrets.PROJECT_PATH }} && git pull && node app
+          script: cd ${{ secrets.PROJECT_PATH }} && git pull && pm2 start app.js
