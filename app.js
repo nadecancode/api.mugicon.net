@@ -4,6 +4,20 @@ let path = require('path');
 let cookieParser = require('cookie-parser');
 let logger = require('morgan');
 let expression = require('./util/expression');
+let convict = require('convict');
+
+let config = convict({
+    port: {
+        doc: 'The port that MUGI API will bind on.',
+        format: 'port',
+        default: 8002,
+        env: 'PORT',
+        arg: 'port'
+    },
+});
+
+config.loadFile('./config.json');
+config.validate({allowed: 'strict'});
 
 let mc_status_router = require('./routes/mc-status');
 let aeries = require('./routes/aeries');
@@ -25,7 +39,9 @@ app.use('/mc-status', mc_status_router);
 app.use('/aeries', aeries);
 app.use("/", index);
 
-app.listen(8002);
-console.log("Started listening on port 8002");
+let port = config.get('port');
+
+app.listen(port);
+console.log("MUGI API is currently listening on port " + port);
 
 module.exports = app;
