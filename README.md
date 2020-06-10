@@ -14,7 +14,7 @@ If you like this project, please give it a [star](https://github.com/MUGICON/api
 
 # Cloning this repository
 ```
-git clone -https://github.com/MUGICON/api.mugicon.net.git
+git clone https://github.com/MUGICON/api.mugicon.net.git
 ```
 
 # License
