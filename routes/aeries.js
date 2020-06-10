@@ -142,8 +142,9 @@ function checkToken(request, response) {
                 "code": 403,
                 "message": "Only `Bearer` Authorization method is supported at this moment"
             });
-        return;
+        return null;
     }
+
     let token = auth.replace(/^Bearer/, "").trim();
 
     let cookie = tokenCache[token];
