@@ -8,14 +8,14 @@ I'm also working on a document for this project. It's available [here](https://d
 
 If you like this project, please give it a [star](https://github.com/MUGICON/api.mugicon.net/stargazers), I'd be extremely appreciated :)
 
-# API Developed & Included:
-* [MC-Status](https://doc.mugicon.net/mc-status)
-* [Aeries API](https://doc.mugicon.net/aeries-api)
+## API Developed & Included
+*   [MC-Status](https://doc.mugicon.net/mc-status)
+*   [Aeries API](https://doc.mugicon.net/aeries-api)
 
-# Cloning this repository
-```
+## Cloning this repository
+```markdown
 git clone https://github.com/MUGICON/api.mugicon.net.git
 ```
 
-# License
+## License
 [GNU General Public License, version 3 (GPLv3)](https://github.com/MUGICON/api.mugicon.net/blob/master/LICENSE)
