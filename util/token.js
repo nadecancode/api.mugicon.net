@@ -1,5 +1,5 @@
-let hat = require('hat');
+let hat = require("hat");
 
-module.exports.randomToken = function(length) {
+module.exports.randomToken = function (length) {
     return hat();
 };
