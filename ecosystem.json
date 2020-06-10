@@ -1,0 +1,12 @@
+{
+  "apps" : [{
+    "name"      : "MUGI API",
+    "script"    : "app.js",
+    "env": {
+      "COMMON_VARIABLE": "true"
+    },
+    "env_production" : {
+      "NODE_ENV": "production"
+    }
+  }]
+}
