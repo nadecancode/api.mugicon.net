@@ -19,7 +19,7 @@ let config = convict({
 config.loadFile("./config.json");
 config.validate({allowed: "strict"});
 
-let mc_status_router = require("./routes/mc-status");
+let mcStatusRouter = require("./routes/mc-status");
 let aeries = require("./routes/aeries");
 let index = require("./routes/index");
 
@@ -35,7 +35,7 @@ app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/mc-status", mc_status_router);
+app.use("/mc-status", mcStatusRouter);
 app.use("/aeries", aeries);
 app.use("/", index);
 
