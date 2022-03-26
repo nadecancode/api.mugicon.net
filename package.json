@@ -18,7 +18,7 @@
     "hoek": ">=4.2.1",
     "http-errors": "~1.6.3",
     "jsdom": "^16.2.2",
-    "minimist": ">=0.2.1",
+    "minimist": ">=1.2.6",
     "morgan": "~1.9.1",
     "pug": "2.0.0-beta11",
     "request": "latest"
