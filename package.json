@@ -12,7 +12,7 @@
     "cookie-parser": "~1.4.4",
     "cryptiles": ">=4.1.2",
     "debug": "~2.6.9",
-    "express": "~4.16.1",
+    "express": "~4.17.3",
     "fast-html-parser": "^1.0.1",
     "hat": "0.0.3",
     "hoek": ">=4.2.1",
